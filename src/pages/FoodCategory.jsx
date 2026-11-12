@@ -5,75 +5,29 @@ import { Col, Container, Form, Modal, Row } from "react-bootstrap";
 import categoryImage from "../assets/images/cate-1.jpg";
 import categoryImage2 from "../assets/images/cate-2.jpg";
 import categoryImage3 from "../assets/images/cate-3.jpg";
+import Veg from "../assets/images/veg.png";
+import NonVeg from "../assets/images/non-veg.png";
 
 function FoodCategory() {
   const initialCategories = [
-    {
-      id: 1,
-      code: "FOOD655415",
-      name: "Starters",
-      image: categoryImage,
-    },
-    {
-      id: 2,
-      code: "FOOD655416",
-      name: "Main Course",
-      image: categoryImage2,
-    },
-    {
-      id: 3,
-      code: "FOOD655417",
-      name: "Chinese Food",
-      image: categoryImage3,
-    },
-    {
-      id: 4,
-      code: "FOOD655418",
-      name: "Indian Cuisine",
-      image: categoryImage,
-    },
-    {
-      id: 5,
-      code: "FOOD655419",
-      name: "Tandoori Specials",
-      image: categoryImage2,
-    },
-    {
-      id: 6,
-      code: "FOOD655420",
-      name: "Biryani",
-      image: categoryImage3,
-    },
-    {
-      id: 7,
-      code: "FOOD655421",
-      name: "Desserts",
-      image: categoryImage2,
-    },
-    {
-      id: 8,
-      code: "FOOD655422",
-      name: "Beverages",
-      image: categoryImage3,
-    },
-    {
-      id: 9,
-      code: "FOOD655421",
-      name: "Desserts",
-      image: categoryImage2,
-    },
-    {
-      id: 10,
-      code: "FOOD655422",
-      name: "Beverages",
-      image: categoryImage3,
-    },
+    { id: 1, code: "FOOD655415", itemcategory: Veg, image: categoryImage },
+    { id: 2, code: "FOOD655416", itemcategory: NonVeg, image: categoryImage2 },
+    { id: 3, code: "FOOD655417", itemcategory: Veg, image: categoryImage3 },
+    { id: 4, code: "FOOD655418", itemcategory: Veg, image: categoryImage },
+    { id: 5, code: "FOOD655419", itemcategory: Veg, image: categoryImage2 },
+    { id: 6, code: "FOOD655420", itemcategory: Veg, image: categoryImage3 },
+    { id: 7, code: "FOOD655421", itemcategory: NonVeg, image: categoryImage2 },
+    { id: 8, code: "FOOD655422", itemcategory: Veg, image: categoryImage3 },
+    { id: 9, code: "FOOD655421", itemcategory: Veg, image: categoryImage2 },
+    { id: 10, code: "FOOD655422", itemcategory: NonVeg, image: categoryImage3 },
   ];
+
   const [categories, setCategories] = useState(initialCategories);
   const [show, setShow] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [categoryName, setCategoryName] = useState("");
+  const [categoryType, setCategoryType] = useState("Veg");
   const [editId, setEditId] = useState(null);
   const [validated, setValidated] = useState(false);
 
@@ -82,9 +36,11 @@ function FoodCategory() {
   const handleClose = () => {
     setShow(false);
     setCategoryName("");
+    setCategoryType("Veg");
     setPreviewImage(null);
     setEditId(null);
     setValidated(false);
+    setIsDragging(false);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -93,6 +49,7 @@ function FoodCategory() {
 
   const handleShow = () => {
     setCategoryName("");
+    setCategoryType("Veg");
     setPreviewImage(null);
     setEditId(null);
     setValidated(false);
@@ -101,7 +58,8 @@ function FoodCategory() {
 
   const handleEdit = (category) => {
     setEditId(category.id);
-    setCategoryName(category.name);
+    setCategoryName(category.name || "");
+    setCategoryType(category.itemcategory === NonVeg ? "Non Veg" : "Veg");
     setPreviewImage(category.image);
     setValidated(false);
     setShow(true);
@@ -114,6 +72,9 @@ function FoodCategory() {
 
     if (!allowedTypes.includes(file.type)) {
       alert("Please upload PNG, JPG, JPEG or WEBP image.");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
       return;
     }
 
@@ -157,6 +118,7 @@ function FoodCategory() {
         ? categories.find((item) => item.id === editId)?.code
         : `FOOD${Date.now().toString().slice(-6)}`,
       name: categoryName.trim(),
+      itemcategory: categoryType === "Veg" ? Veg : NonVeg,
       image: previewImage,
     };
 
@@ -224,7 +186,10 @@ function FoodCategory() {
                     <div className="pos-food-item add-food" key={category.id}>
                       <div className="pos-food-image">
                         {category.image ? (
-                          <img src={category.image} alt={category.name} />
+                          <img
+                            src={category.image}
+                            alt={category.name || "Food category"}
+                          />
                         ) : (
                           <div className="d-flex align-items-center justify-content-center h-100">
                             <CloudUpload size={30} />
@@ -232,9 +197,9 @@ function FoodCategory() {
                         )}
                       </div>
 
-                      <div className="pos-food-details mb-3">
+                      <div className="pos-food-details veg-nonveg mb-4">
                         <small>{category.code}</small>
-                        <h6>{category.name}</h6>
+                        <img src={category.itemcategory} alt="Category type" />
                       </div>
 
                       <div className="pos-food-btn d-flex gap-2">
@@ -283,18 +248,29 @@ function FoodCategory() {
                   {editId ? "Edit Category" : "Add Category"}
                 </h5>
 
-                <Form.Group className="mb-3" controlId="categoryName">
+                <Form.Group className="mb-2" controlId="tableCapacity">
                   <Form.Label>Category Name</Form.Label>
                   <Form.Control
+                    required
                     type="text"
                     placeholder="Enter category name"
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
-                    required
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter category name.
                   </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="tableFloor">
+                  <Form.Label>Category Type</Form.Label>
+                  <Form.Select
+                    value={categoryType}
+                    onChange={(e) => setCategoryType(e.target.value)}
+                  >
+                    <option value="Veg">Veg</option>
+                    <option value="Non Veg">Non Veg</option>
+                  </Form.Select>
                 </Form.Group>
 
                 <div

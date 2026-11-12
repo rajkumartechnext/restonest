@@ -367,14 +367,6 @@ function Waitter() {
                       <div className="pos-food-btn d-flex gap-2">
                         <button
                           type="button"
-                          className="action-btn add"
-                          title="Access"
-                        >
-                          <Lock size={15} />
-                        </button>
-
-                        <button
-                          type="button"
                           className="action-btn edit"
                           title="Edit Waiter"
                           onClick={() => handleEdit(waiter)}
@@ -422,21 +414,6 @@ function Waitter() {
 
                 <Row>
                   <Col md={6}>
-                    <Form.Group className="mb-3" controlId="accessCode">
-                      <Form.Label>Access Code</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter access code"
-                        value={formData.accessCode}
-                        onChange={(event) =>
-                          updateField("accessCode", event.target.value)
-                        }
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-
-                  <Col md={6}>
                     <Form.Group className="mb-3" controlId="waiterName">
                       <Form.Label>Full Name</Form.Label>
                       <Form.Control
@@ -477,21 +454,6 @@ function Waitter() {
                           updateField("phone", event.target.value)
                         }
                         required
-                      />
-                    </Form.Group>
-                  </Col>
-
-                  <Col md={6}>
-                    <Form.Group className="mb-3" controlId="waiterPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        placeholder="Enter password"
-                        value={formData.password}
-                        onChange={(event) =>
-                          updateField("password", event.target.value)
-                        }
-                        required={!editId}
                       />
                     </Form.Group>
                   </Col>

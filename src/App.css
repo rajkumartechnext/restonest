@@ -519,9 +519,6 @@ button.restonest-mobile-menu {
 
 /* Mobile */
 @media (max-width: 767px) {
-  .pos-food-wrapper .pos-food-inner {
-    display: none !important;
-  }
 
   .pos-food-wrapper .overlay-category {
     display: block;
@@ -3174,7 +3171,7 @@ button.pos-ordered-remove {
   line-height: 9px;
   font-weight: 600;
   position: absolute;
-  top: 88%;
+  top: 90%;
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 4px 8px;
@@ -3879,6 +3876,11 @@ span.stock-status.denger.history {
     background: #fff;
   }
 
+  .sales-overview-header {
+    display: inline-grid;
+    gap: 8px;
+  }
+
   .login-wrapper {
     min-height: 100vh;
     max-width: 100%;
@@ -4248,5 +4250,103 @@ a.log-out {
 
   .pos-food-details p {
     font-size: 10px;
+  }
+}
+
+
+
+.veg-nonveg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.veg-nonveg img {
+  width: 20px;
+  height: 20px;
+}
+
+.add-on-right p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 550;
+}
+
+p.in-stock {
+  color: #36b118;
+}
+
+.menu-item {
+  font-size: 12px;
+  text-align: center;
+  border-radius: 10px;
+  font-weight: 550;
+}
+
+.menu-item.active {
+  background: #ddffd4;
+  color: #278a0e;
+  border: 1px solid #278a0e;
+
+}
+
+.menu-item.inactive {
+  background: #fde8e8;
+  color: #dc5353;
+  border: 1px solid #dc5353;
+}
+
+.add-ones-body.menuitem {
+  border: 1px solid #eaeaea;
+  border-radius: 25px;
+}
+
+
+
+.toppings-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: 100%;
+}
+
+.toppings-add>* {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.toppings-under {
+  background: #548647;
+  color: #ddffd4;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 25px;
+}
+
+.toppings-under span {
+  background: #ddffd4;
+  color: #548647;
+  font-weight: 650;
+  margin-left: 10px;
+  padding: 2px 5px;
+  border-radius: 14px;
+}
+
+.pay-settlement h6 {
+  font-weight: 600;
+  font-size: 13px;
+  color: #555;
+}
+
+.veriant-settlement {
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px dashed #75b566;
+  background: #edf7ed;
+}
+
+@media (max-width: 576px) {
+  .toppings-add {
+    gap: 8px;
   }
 }

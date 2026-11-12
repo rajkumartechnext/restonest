@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import {
   CloudUpload,
-  CookingPot,
+  Eye,
   Pencil,
   Plus,
   Search,
@@ -10,31 +10,11 @@ import {
 } from "lucide-react";
 import Header from "../components/Header";
 import { Col, Container, Form, Modal, Row } from "react-bootstrap";
-import Select from "react-select";
 import categoryImage from "../assets/images/cate-1.jpg";
 import categoryImage2 from "../assets/images/cate-2.jpg";
 import categoryImage3 from "../assets/images/cate-3.jpg";
 
 function MenuItem() {
-  const options = [
-    { value: "Table 1", label: "Table 1" },
-    { value: "Table 2", label: "Table 2" },
-    { value: "Table 3", label: "Table 3" },
-    { value: "Table 4", label: "Table 4" },
-    { value: "Table 5", label: "Table 5" },
-  ];
-
-  const unitOptions = [
-    { value: "Kg", label: "Kg" },
-    { value: "Gram", label: "Gram" },
-    { value: "Litre", label: "Litre" },
-    { value: "ML", label: "ML" },
-    { value: "Piece", label: "Piece" },
-    { value: "Packet", label: "Packet" },
-    { value: "Tablespoon", label: "Tablespoon" },
-    { value: "Teaspoon", label: "Teaspoon" },
-  ];
-
   const initialCategories = [
     {
       id: 1,
@@ -47,6 +27,8 @@ function MenuItem() {
       lowStock: 5,
       status: "Active",
       recipe: [],
+      variants: [],
+      addons: [],
     },
     {
       id: 2,
@@ -59,6 +41,8 @@ function MenuItem() {
       lowStock: 5,
       status: "Active",
       recipe: [],
+      variants: [],
+      addons: [],
     },
     {
       id: 3,
@@ -71,6 +55,8 @@ function MenuItem() {
       lowStock: 5,
       status: "Inactive",
       recipe: [],
+      variants: [],
+      addons: [],
     },
     {
       id: 4,
@@ -83,6 +69,8 @@ function MenuItem() {
       lowStock: 5,
       status: "Active",
       recipe: [],
+      variants: [],
+      addons: [],
     },
     {
       id: 5,
@@ -95,6 +83,8 @@ function MenuItem() {
       lowStock: 3,
       status: "Inactive",
       recipe: [],
+      variants: [],
+      addons: [],
     },
     {
       id: 6,
@@ -107,6 +97,8 @@ function MenuItem() {
       lowStock: 5,
       status: "Active",
       recipe: [],
+      variants: [],
+      addons: [],
     },
     {
       id: 7,
@@ -119,6 +111,8 @@ function MenuItem() {
       lowStock: 5,
       status: "Active",
       recipe: [],
+      variants: [],
+      addons: [],
     },
   ];
 
@@ -133,7 +127,6 @@ function MenuItem() {
   const [editId, setEditId] = useState(null);
   const [validated, setValidated] = useState(false);
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
   const [productCategory, setProductCategory] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
@@ -156,6 +149,14 @@ function MenuItem() {
 
   const [recipeValidated, setRecipeValidated] = useState(false);
 
+  const [variantRows, setVariantRows] = useState([
+    { id: Date.now(), name: "", amount: "" },
+  ]);
+
+  const [addonRows, setAddonRows] = useState([
+    { id: Date.now() + 1, name: "", amount: "" },
+  ]);
+
   const fileInputRef = useRef(null);
 
   const resetForm = () => {
@@ -168,6 +169,8 @@ function MenuItem() {
     setLowStock("");
     setStatus("Active");
     setValidated(false);
+    setVariantRows([{ id: Date.now(), name: "", amount: "" }]);
+    setAddonRows([{ id: Date.now() + 1, name: "", amount: "" }]);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -190,10 +193,23 @@ function MenuItem() {
     setPreviewImage(category.image);
     setProductCategory(category.category);
     setPrice(category.price);
-    setStock(category.stock);
-    setLowStock(category.lowStock);
+    setStock(category.stock ?? "");
+    setLowStock(category.lowStock ?? "");
     setStatus(category.status);
     setValidated(false);
+
+    setVariantRows(
+      category.variants?.length
+        ? category.variants.map((item) => ({ ...item }))
+        : [{ id: Date.now(), name: "", amount: "" }],
+    );
+
+    setAddonRows(
+      category.addons?.length
+        ? category.addons.map((item) => ({ ...item }))
+        : [{ id: Date.now() + 1, name: "", amount: "" }],
+    );
+
     setShow(true);
   };
 
@@ -230,6 +246,40 @@ function MenuItem() {
     }
   };
 
+  const handleAddVariant = () => {
+    setVariantRows((prev) => [
+      ...prev,
+      { id: Date.now() + Math.random(), name: "", amount: "" },
+    ]);
+  };
+
+  const handleRemoveVariant = (id) => {
+    setVariantRows((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleVariantChange = (id, field, value) => {
+    setVariantRows((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)),
+    );
+  };
+
+  const handleAddAddon = () => {
+    setAddonRows((prev) => [
+      ...prev,
+      { id: Date.now() + Math.random(), name: "", amount: "" },
+    ]);
+  };
+
+  const handleRemoveAddon = (id) => {
+    setAddonRows((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleAddonChange = (id, field, value) => {
+    setAddonRows((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)),
+    );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -241,10 +291,12 @@ function MenuItem() {
       return;
     }
 
+    const existingCategory = categories.find((item) => item.id === editId);
+
     const newCategory = {
       id: editId || Date.now(),
       code: editId
-        ? categories.find((item) => item.id === editId)?.code
+        ? existingCategory?.code
         : `FOOD${Date.now().toString().slice(-6)}`,
       name: categoryName.trim(),
       image: previewImage,
@@ -252,10 +304,22 @@ function MenuItem() {
       price: Number(price),
       stock: Number(stock),
       lowStock: Number(lowStock),
-      status: status,
-      recipe: editId
-        ? categories.find((item) => item.id === editId)?.recipe || []
-        : [],
+      status,
+      recipe: existingCategory?.recipe || [],
+      variants: variantRows
+        .filter((item) => item.name.trim() && item.amount !== "")
+        .map((item) => ({
+          ...item,
+          name: item.name.trim(),
+          amount: Number(item.amount),
+        })),
+      addons: addonRows
+        .filter((item) => item.name.trim() && item.amount !== "")
+        .map((item) => ({
+          ...item,
+          name: item.name.trim(),
+          amount: Number(item.amount),
+        })),
     };
 
     if (editId) {
@@ -334,13 +398,6 @@ function MenuItem() {
       prev.map((row) => (row.id === id ? { ...row, [field]: value } : row)),
     );
   };
-
-  const ingredientOptions = categories
-    .filter((item) => item.id !== activeRecipeItem?.id)
-    .map((item) => ({
-      value: item.id,
-      label: item.name,
-    }));
 
   const handleRecipeSubmit = (e) => {
     e.preventDefault();
@@ -495,7 +552,7 @@ function MenuItem() {
                           onClick={() => handleRecipeShow(category)}
                           title="Manage Recipe"
                         >
-                          <CookingPot size={15} />
+                          <Eye size={15} />
                         </button>
 
                         <button
@@ -544,12 +601,12 @@ function MenuItem() {
                 </h5>
 
                 <Row>
-                  <Col md={7}>
+                  <Col md={6}>
                     <Form.Group className="mb-3" controlId="categoryName">
-                      <Form.Label>Product Name</Form.Label>
+                      <Form.Label>Food Name</Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="Enter category name"
+                        placeholder="Enter Food name"
                         value={categoryName}
                         onChange={(e) => setCategoryName(e.target.value)}
                         required
@@ -557,21 +614,7 @@ function MenuItem() {
                     </Form.Group>
                   </Col>
 
-                  <Col md={5}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Stock Quantity</Form.Label>
-                      <Form.Control
-                        type="number"
-                        min="0"
-                        placeholder="Enter stock quantity"
-                        value={stock}
-                        onChange={(e) => setStock(e.target.value)}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-
-                  <Col md={7}>
+                  <Col md={6}>
                     <Form.Group controlId="productCategory">
                       <Form.Label>Select Category</Form.Label>
                       <Form.Select
@@ -584,20 +627,6 @@ function MenuItem() {
                         <option value="Starters">Starters</option>
                         <option value="Main Course">Main Course</option>
                       </Form.Select>
-                    </Form.Group>
-                  </Col>
-
-                  <Col md={5}>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Low Stock Alert</Form.Label>
-                      <Form.Control
-                        type="number"
-                        min="0"
-                        placeholder="Enter low stock limit"
-                        value={lowStock}
-                        onChange={(e) => setLowStock(e.target.value)}
-                        required
-                      />
                     </Form.Group>
                   </Col>
 
@@ -705,6 +734,142 @@ function MenuItem() {
                     </>
                   )}
                 </div>
+
+                <div className="veriant-settlement mt-3">
+                  <h5 className="qr-header mb-2">
+                    <div className="dot"></div>
+                    Add Verients
+                  </h5>
+
+                  {variantRows.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="d-flex align-items-end gap-2 mb-2 payment-method-row"
+                    >
+                      <div className="flex-grow-1">
+                        <Form.Group>
+                          <Form.Label>Verients</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Enter variant name"
+                            value={item.name}
+                            onChange={(e) =>
+                              handleVariantChange(
+                                item.id,
+                                "name",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </Form.Group>
+                      </div>
+
+                      <div className="flex-grow-1">
+                        <Form.Group>
+                          <Form.Label>Amount</Form.Label>
+                          <Form.Control
+                            type="number"
+                            min="0"
+                            placeholder="Enter amount"
+                            value={item.amount}
+                            onChange={(e) =>
+                              handleVariantChange(
+                                item.id,
+                                "amount",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </Form.Group>
+                      </div>
+
+                      <div className="flex-shrink-0">
+                        {index === 0 ? (
+                          <button
+                            type="button"
+                            className="action-btn add mb-1"
+                            onClick={handleAddVariant}
+                          >
+                            <Plus size={15} />
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="action-btn delete mb-1"
+                            onClick={() => handleRemoveVariant(item.id)}
+                          >
+                            <X size={15} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <h5 className="qr-header mt-2 mb-2">
+                    <div className="dot"></div>
+                    Add On
+                  </h5>
+
+                  {addonRows.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="d-flex align-items-end gap-2 mb-2 payment-method-row"
+                    >
+                      <div className="flex-grow-1">
+                        <Form.Group>
+                          <Form.Label>Addon Name</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Enter addon name"
+                            value={item.name}
+                            onChange={(e) =>
+                              handleAddonChange(item.id, "name", e.target.value)
+                            }
+                          />
+                        </Form.Group>
+                      </div>
+
+                      <div className="flex-grow-1">
+                        <Form.Group>
+                          <Form.Label>Amount</Form.Label>
+                          <Form.Control
+                            type="number"
+                            min="0"
+                            placeholder="Enter amount"
+                            value={item.amount}
+                            onChange={(e) =>
+                              handleAddonChange(
+                                item.id,
+                                "amount",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </Form.Group>
+                      </div>
+
+                      <div className="flex-shrink-0">
+                        {index === 0 ? (
+                          <button
+                            type="button"
+                            className="action-btn add mb-1"
+                            onClick={handleAddAddon}
+                          >
+                            <Plus size={15} />
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="action-btn delete mb-1"
+                            onClick={() => handleRemoveAddon(item.id)}
+                          >
+                            <X size={15} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </Modal.Body>
@@ -734,154 +899,92 @@ function MenuItem() {
       >
         <Form noValidate onSubmit={handleRecipeSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>Menu Recipe</Modal.Title>
+            <Modal.Title>View Menu Items</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
             <div className="settlement">
               <div className="pay-settlement">
-                <h5 className="qr-header">
+                <h5 className="qr-header mb-2">
                   <div className="dot"></div>
-                  Recipe Details
+                  Menu Items Details
                 </h5>
 
-                {activeRecipeItem && (
-                  <div className="mb-3">
-                    <Form.Label>Menu Item</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={activeRecipeItem.name}
-                      readOnly
+                <div className="add-ones-body menuitem">
+                  <div className="add-on-img">
+                    <img
+                      src={activeRecipeItem?.image || categoryImage}
+                      className="img-fluid"
+                      alt={activeRecipeItem?.name || "Menu item"}
                     />
                   </div>
-                )}
+                  <div className="add-on-det">
+                    <small>{activeRecipeItem?.code}</small>
+                    <h5 id="add-on-modal-title">{activeRecipeItem?.name}</h5>
+                    <p>₹{activeRecipeItem?.price}</p>
+                  </div>
+                  <div className="add-on-right">
+                    <p>{activeRecipeItem?.category}</p>
+                    <p className="in-stock">{activeRecipeItem?.stock} Stock</p>
+                    <div
+                      className={`menu-item ${
+                        activeRecipeItem?.status === "Active"
+                          ? "active"
+                          : "inactive"
+                      }`}
+                    >
+                      {activeRecipeItem?.status}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                <h5 className="qr-header">
+              <div className="pay-settlement">
+                <h5 className="qr-header mb-2">
                   <div className="dot"></div>
-                  Ingredients
+                  Verients
                 </h5>
+                <div className="toppings-add">
+                  <div className="toppings-under">
+                    Large (Serves 4) <span>₹250</span>
+                  </div>
+                  <div className="toppings-under">
+                    Medium (Serves 4) <span>₹180</span>
+                  </div>
+                </div>
+              </div>
 
-                {recipeRows.map((row, index) => (
-                  <Row
-                    className="align-items-end mb-3 payment-method-row"
-                    key={row.id}
-                  >
-                    <Col md={12} xs={12} className="mb-3">
-                      <div className="multi-select-wrapper">
-                        <label className="form-label">Item Name</label>
-
-                        <Select
-                          options={ingredientOptions}
-                          value={row.item}
-                          onChange={(value) =>
-                            handleRecipeChange(row.id, "item", value)
-                          }
-                          placeholder="Search item..."
-                          isSearchable
-                          classNamePrefix="restonest-select"
-                          menuPortalTarget={document.body}
-                          menuPosition="fixed"
-                          styles={{
-                            menuPortal: (base) => ({
-                              ...base,
-                              zIndex: 9999,
-                            }),
-                          }}
-                        />
-                        {recipeValidated && !row.item && (
-                          <small className="text-danger">
-                            Please select an item.
-                          </small>
-                        )}
-                      </div>
-                    </Col>
-
-                    <Col md={6} xs={12}>
-                      <div className="multi-select-wrapper">
-                        <label className="form-label">Unit</label>
-
-                        <Select
-                          options={unitOptions}
-                          value={row.unit}
-                          onChange={(value) =>
-                            handleRecipeChange(row.id, "unit", value)
-                          }
-                          placeholder="Search unit..."
-                          isSearchable
-                          classNamePrefix="restonest-select"
-                          menuPortalTarget={document.body}
-                          menuPosition="fixed"
-                          styles={{
-                            menuPortal: (base) => ({
-                              ...base,
-                              zIndex: 9999,
-                            }),
-                          }}
-                        />
-                        {recipeValidated && !row.unit && (
-                          <small className="text-danger">
-                            Please select a unit.
-                          </small>
-                        )}
-                      </div>
-                    </Col>
-
-                    <Col md={4} xs={8}>
-                      <Form.Group>
-                        <Form.Label>Quantity</Form.Label>
-                        <Form.Control
-                          type="number"
-                          min="0.01"
-                          step="0.01"
-                          placeholder="Enter quantity"
-                          value={row.quantity}
-                          onChange={(e) =>
-                            handleRecipeChange(
-                              row.id,
-                              "quantity",
-                              e.target.value,
-                            )
-                          }
-                          isInvalid={
-                            recipeValidated &&
-                            (!row.quantity || Number(row.quantity) <= 0)
-                          }
-                        />
-                        {recipeValidated && !row.unit && (
-                          <small className="text-danger">
-                            Please put Quantity.
-                          </small>
-                        )}
-                      </Form.Group>
-                    </Col>
-
-                    <Col md={2} xs={4}>
-                      <div className="d-flex gap-2 mb-1">
-                        {index === 0 ? (
-                          <button
-                            type="button"
-                            className="action-btn add"
-                            onClick={handleAddRecipeRow}
-                            title="Add Ingredient"
-                          >
-                            <Plus size={15} />
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            className="action-btn delete"
-                            onClick={() => handleRemoveRecipeRow(row.id)}
-                            title="Remove Ingredient"
-                          >
-                            <X size={15} />
-                          </button>
-                        )}
-                      </div>
-                    </Col>
-
-                    <div className="divider"></div>
-                  </Row>
-                ))}
+              <div className="pay-settlement">
+                <h5 className="qr-header mb-2">
+                  <div className="dot"></div>
+                  Add On
+                </h5>
+                <div className="toppings-add">
+                  <div className="toppings-under">
+                    Cheese Burst <span>₹80</span>
+                  </div>
+                  <div className="toppings-under">
+                    Fresh Pan Pizza <span>₹60</span>
+                  </div>
+                  <div className="toppings-under">
+                    Extra Cheese <span>₹80</span>
+                  </div>
+                  <div className="toppings-under">
+                    Jalapeno <span>₹60</span>
+                  </div>
+                  <div className="toppings-under">
+                    Black Olives <span>₹20</span>
+                  </div>
+                  <div className="toppings-under">
+                    Mushroom <span>₹40</span>
+                  </div>
+                  <div className="toppings-under">
+                    Mayonnaise <span>₹20</span>
+                  </div>
+                  <div className="toppings-under">
+                    Peri Peri Sauce <span>₹40</span>
+                  </div>
+                </div>
               </div>
             </div>
           </Modal.Body>
@@ -893,10 +996,6 @@ function MenuItem() {
               onClick={handleRecipeClose}
             >
               Cancel
-            </button>
-
-            <button className="resto-primary" type="submit">
-              Save Recipe
             </button>
           </Modal.Footer>
         </Form>
