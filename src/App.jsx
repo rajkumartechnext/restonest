@@ -19,6 +19,7 @@ import Login from "./pages/Login";
 import ProfitLoss from "./pages/ProfitLoss";
 import Settings from "./pages/Settings";
 import Captain from "./pages/Captain";
+import KotInvoice from "./pages/KotInvoice";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="/profit-loss" element={<ProfitLoss />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/captains" element={<Captain />} />
+        <Route path="/kot-invoice" element={<KotInvoice />} />
       </Routes>
     </BrowserRouter>
   );
