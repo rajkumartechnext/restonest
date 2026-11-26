@@ -26,7 +26,40 @@ function KotInvoice() {
     background: #fff;
     border: 1px solid #ddd;
     color: #222;
+     position: relative;
+  overflow: hidden;
         }
+
+
+.kot-bill::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 190px;
+  height: 190px;
+  transform: translate(-50%, -50%);
+  background-image: url("./src/assets/images/logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.kot-bill > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media print {
+  .kot-bill::before {
+    opacity: 0.10;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
 
         .kot-heading {
           text-align: center;
