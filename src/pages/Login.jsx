@@ -119,7 +119,7 @@ function App() {
       rgb(31 105 12 / 84%) 48%,
       rgba(12, 48, 9, .72) 100%
     ),
-    url("./src/assets/images/login-back.jpg");
+    url("${LoginBack}");
   background-size: cover, cover;
   background-position: center, center;
   background-repeat: no-repeat, no-repeat;
