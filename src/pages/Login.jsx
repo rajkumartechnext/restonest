@@ -64,8 +64,6 @@ function App() {
   return (
     <>
       <style>{`
-
-
 .page {
   display: grid;
   grid-template-columns: 1.05fr .95fr;
@@ -260,7 +258,7 @@ function App() {
 .card__head p {
     margin-top: 4px;
     color: #8d8d8d;
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 550;
 }
 
@@ -571,7 +569,7 @@ font-size: 12.5px;
     align-items: flex-start;
   }
 
-  .card {
+  .card__head {
     border: 0;
     box-shadow: none;
     background: transparent;
@@ -581,7 +579,7 @@ font-size: 12.5px;
 }
 
 @media (max-width: 340px) {
-  .card {
+  .card__head {
     padding: 4px 0 20px;
   }
 
@@ -684,9 +682,6 @@ font-size: 12.5px;
               <div className="field">
                 <div className="label-row">
                   <label htmlFor="password">Password</label>
-                  <a href="/forgot-password" className="link">
-                    Forgot password?
-                  </a>
                 </div>
 
                 <div className="input-wrap">
@@ -714,7 +709,7 @@ font-size: 12.5px;
                     }
                     aria-pressed={showPassword}
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                   </button>
                 </div>
 
@@ -739,7 +734,7 @@ font-size: 12.5px;
 
               <button
                 type="submit"
-                className={`login-btn ${loading ? "is-loading" : ""}`}
+                className={`login-btn ${loading ? "is-login-loading" : ""}`}
                 disabled={loading}
               >
                 {loading && <span className="spinner"></span>}
