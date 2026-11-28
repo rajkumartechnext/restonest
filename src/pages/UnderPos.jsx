@@ -31,7 +31,8 @@ const foodItems = [
     price: 999,
     category: "Main Courses",
     foodType: "nonveg",
-    image: categoryImage,
+    image:
+      "https://assets.licious.in/oms/9a6727b7-490b-02a4-0276-c991479e684f/original/1792008761670.jpg",
   },
   {
     id: 2,
@@ -39,7 +40,7 @@ const foodItems = [
     price: 249,
     category: "Appetizers",
     foodType: "veg",
-    image: categoryImage2,
+    image: "categoryImage2",
   },
   {
     id: 3,
@@ -47,7 +48,8 @@ const foodItems = [
     price: 299,
     category: "Main Courses",
     foodType: "nonveg",
-    image: categoryImage3,
+    image:
+      "https://www.ruchiskitchen.com/wp-content/uploads/2020/09/Chicken-Biryani-Recipe-01-1-500x500.jpg",
   },
   {
     id: 4,
@@ -63,7 +65,8 @@ const foodItems = [
     price: 349,
     category: "Main Courses",
     foodType: "nonveg",
-    image: categoryImage2,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbtBbYy6hwZdYxouyYL-Q9QGoIMokD3A_DdiZCiS6bC8yAW__60YtLtFyu&s=10",
   },
   {
     id: 6,
@@ -79,7 +82,8 @@ const foodItems = [
     price: 399,
     category: "Appetizers",
     foodType: "nonveg",
-    image: categoryImage,
+    image:
+      "https://sinfullyspicy.com/wp-content/uploads/2014/07/1200-by-1200-images-2-500x500.jpg",
   },
   {
     id: 8,
@@ -87,7 +91,7 @@ const foodItems = [
     price: 379,
     category: "Main Courses",
     foodType: "nonveg",
-    image: categoryImage4,
+    image: "https://assets.cookdtv.com/t/1080/lpdiq6s9cmk1kq04e28s0zctpg9o",
   },
   {
     id: 9,
@@ -103,7 +107,8 @@ const foodItems = [
     price: 169,
     category: "Chinese Snacks",
     foodType: "nonveg",
-    image: categoryImage3,
+    image:
+      "https://static.toiimg.com/thumb/60275824.cms?imgsize=1041917&width=800&height=800",
   },
   {
     id: 11,
@@ -111,7 +116,8 @@ const foodItems = [
     price: 279,
     category: "Appetizers",
     foodType: "nonveg",
-    image: categoryImage4,
+    image:
+      "https://www.kannammacooks.com/wp-content/uploads/finger-fish-fry-recipe-24.jpg",
   },
   {
     id: 12,
@@ -127,7 +133,8 @@ const foodItems = [
     price: 199,
     category: "Fast Food",
     foodType: "nonveg",
-    image: categoryImage2,
+    image:
+      "https://i0.wp.com/flaevor.com/wp-content/uploads/2022/04/SambalFriedChickenBurger1.jpg?resize=1024%2C830&ssl=1",
   },
   {
     id: 14,
